@@ -1,0 +1,31 @@
+---
+
+# Base setup
+- name: Setup base OS configuration
+  hosts: all
+  gather_facts: true
+  roles:
+    - {name: base-config, tags: base-config}
+
+# Setup database tier
+- name: Deploy PostgreSQL server
+  become: true
+  hosts: appdbs
+  roles:
+    - {name: db-tier, tags: [db-tier, dbs, PostgreSQL]}
+
+# Setup application tier
+- name: Deploy application servers
+  become: true
+  hosts: apps
+  roles:
+    - {name: app-tier, tags: [app-tier, apps, Tomcat]}
+
+# Setup load balancer tier
+- name: Deploy load balancer servers
+  become: true
+  hosts: frontends
+  roles:
+    - {name: lb-tier, tags: [lb-tier, lbs, HAProxy]}
+
+...
